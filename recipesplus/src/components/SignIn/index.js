@@ -89,6 +89,7 @@ class SignInGoogleBase extends Component {
 
     this.state = { error: null };
   }
+};
 
   onSubmit = event => {
     this.props.firebase

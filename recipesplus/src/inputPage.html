@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<head>
+
+
+</head>
+
+<body>
+
+
+      <div class="panel panel-default" style="color:aliceblue">
+            <div class="panel-heading">
+                  <h3 class="panel-title" style="text-align:center">Subscription Input</h3>
+            </div>
+            <div class="panel-body">
+                  <div class="container">
+                        <div class="row">
+                              <div class="col-md-12">
+                                    <form action="" method="POST" role="form">
+                                          <legend style="text-align:center">Submitmit Your subscription Data</legend>
+                              </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                              <div class="form-group" style="color: aliceblue"></div>
+                              <div class="col-md-3">
+                              </div>
+                              <div class="col-md-2">
+                                    <label for="">Provider</label>
+                                    <input type="text" class="form-control-transparent" id="providerInput"
+                                          placeholder="Input Provider">
+                              </div>
+                              <div class="col-md-2">
+                                    <label for="">Date Submitted</label>
+                                    <input type="text" class="form-control-transparent" id="sDateInput"
+                                          placeholder="Date Submitted">
+                              </div>
+                              <div class="col-md-2">
+                                    <label for="">Days of Trial</label>
+                                    <input type="text" class="form-control-transparent" id="daysLeftInput"
+                                          placeholder="Days of Trial">
+                              </div>
+                              <div class="col-md-3">
+                                    </div>
+                        </div>
+
+                        <br>
+                        <div class="row">
+                              <div class="col-md-2">
+                              </div>
+                              <div class="col-md-3">
+                              </div>
+                              <div class="col-md-2">
+                                    <button type="submit" class="btn btn-outline-secondary" id="sButton">Submit</button>
+                              </div>
+                              <div class="col-md-2">
+                              </div>
+                              <div class="col-md-3">
+                              </div>
+                        </div>
+                        </form>
+                  </div>
+            </div>
+
+      </div>
+      </div>
+
+      <br>
+
+      </head>
+
+      <body background="Background.jpg">
+
+
+
+
+            <div class="panel panel-default" style="color:aliceblue">
+                  <div class="panel-body">
+                        Active Subscriptions
+                  </div>
+
+                  <table class="table table-bordered table-hover" id="subTable" style="color: aliceblue">
+                        <thead>
+                              <tr>
+                                    <th style="padding-right:150px;">Provider</th>
+                                    <th style="padding-right:150px;">Date Submitted</th>
+                                    <th style="padding-right:150px;">Expriration Date</th>
+                              </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                  </table>
+
+            </div>
+
+
+
+
+      </body>
+      <script>
+            $("#sButton").on("click", function (event) {
+                  var provider = $("#providerInput").val().trim();
+                  var subscriptionDate = $("#sDateInput").val().trim();
+                  var daysLeft = $("#daysLeftInput").val().trim();
+
+                  event.preventDefault()
+
+                  console.log(provider),
+                        console.log(subscriptionDate),
+                        console.log(daysLeft);
+                  var timeToAdd = parseInt(daysLeft) * 86400000;
+                  var subDate = new Date(subscriptionDate);
+                  var final = subDate.setTime(subDate.getTime() + timeToAdd);
+                  var expirationDate = new Date(final)
+                  // var expirationDay = parseInt(dayOfTheMonth) + parseInt(daysLeft);
+                  // var expirationDate = 
+                  // var expirationDate = parseInt(dayOfTheMonth) + parseInt(daysLeft);
+
+                  addInputRow(provider, subscriptionDate, daysLeft)
+
+
+                  insertData(provider, subscriptionDate, daysLeft)
+                  readData(provider)
+
+
+                  function addInputRow(provider, subscriptionDate, daysLeft) {
+                        console.log("inAddTrainRow")
+                        var providerRow = "<td>" + provider + "</td>"
+                        var subscriptionDateRow = "<td>" + subscriptionDate + "</td>"
+                        var daysLeftRow = "<td>" + expirationDate + "</td>"
+
+                        $("#subTable").append("<tr>" + providerRow + subscriptionDateRow + daysLeftRow +
+                              "</tr>")
+
+                        $("#providerInput").val("");
+                        $("#sDateInput").val("");
+                        $("#daysLeftInput").val("");
+
+                  }
+            });
+      </script>
+
+
+</html>
