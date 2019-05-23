@@ -1,5 +1,6 @@
 import app from 'firebase/app';
-import 'firebase/auth'
+import 'firebase/auth';
+import 'firebase/database';
 
 
 const config = {
@@ -12,25 +13,40 @@ const config = {
 };
 
 class Firebase {
-    constructor() {
-        app.initializeApp(config);
+  constructor() {
+    app.initializeApp(config);
 
-        this.auth = app.auth();
-    }
+    this.auth = app.auth();
+    this.db = app.database();
 
-    // Auth API
-    doCreateUserWithEmailAndPassword = (email, password) =>
-      this.auth.createUserWithEmailAndPassword(email, password);
+    this.googleProvider = new app.auth.GoogleAuthProvider();
+    this.facebookProvider = new app.auth.FacebookAuthProvider();
+  }
 
-    doSignInWithEmailAndPassword = (email, password) =>
-      this.auth.signInWithEmailAndPassword(email, password);
+  // Auth API
+  doCreateUserWithEmailAndPassword = (email, password) =>
+    this.auth.createUserWithEmailAndPassword(email, password);
 
-    doSignOut = () => this.auth.signOut();
+  doSignInWithEmailAndPassword = (email, password) =>
+    this.auth.signInWithEmailAndPassword(email, password);
 
-    doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
+  doSignInWithGoogle = () =>
+    this.auth.signInWithPopup(this.googleProvider);
 
-    doPasswordUpdate = password =>
-      this.auth.currentUser.updatePassword(password);
+   doSignInWithFacebook = () =>
+    this.auth.signInWithPopup(this.facebookProvider); 
+
+  doSignOut = () => this.auth.signOut();
+
+  doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
+
+  doPasswordUpdate = password =>
+    this.auth.currentUser.updatePassword(password);
+
+  // *** User API *** //
+  user = uid => this.db.ref(`users/${uid}`);
+
+  users = () => this.db.ref('users');
 }
 
 export default Firebase;

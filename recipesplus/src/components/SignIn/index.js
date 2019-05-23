@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { SignUpLink } from '../SignUp';
+import { PasswordForgetLink } from "../PasswordForget"
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
@@ -10,6 +11,9 @@ const SignInPage = () => (
   <div>
     <h1>SignIn</h1>
     <SignInForm />
+    <SignInGoogle />
+    <SigninFacebook />
+    <PasswordForgetLink />
     <SignUpLink />
   </div>
 );
@@ -34,6 +38,68 @@ class SignInFormBase extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
+        this.props.history.push(ROUTES.HOME);
+      })
+      .catch(error => {
+        this.setState({ error });
+      });
+
+    event.preventDefault();
+  };
+ 
+  class SignInGoogleBase extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { error: null };
+  }
+
+  onSubmit = event => {
+    this.props.firebase
+      .doSignInWithGoogle()
+      .then(socialAuthUser => {
+        //Create a user in Firebase realtime database
+        return this.props.firebase
+          .user(socialAuthUser.user.uid)
+          .set({
+            username: socialAuthUser.user.displayName,
+            email: socialAuthUser.user.email,
+            roles: {},
+          });
+      })
+      .then(() => {
+        this.setState({ error: null });
+        this.props.history.push(ROUTES.HOME);
+      })
+      .catch(error => {
+        this.setState({ error });
+      });
+
+    event.preventDefault();
+  };
+
+    class SignInFacebookBase extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { error: null };
+  }
+
+  onSubmit = event => {
+    this.props.firebase
+      .doSignInWithFacebook()
+      .then(socialAuthUser => {
+        //Create a user in Firebase realtime database
+        return this.props.firebase
+          .user(socialAuthUser.user.uid)
+          .set({
+            username: socialAuthUser.additionalUserInfo.profile.name,
+            email: socialAuthUser.additionalUserInfo.profile.email,
+            roles: {},
+          });
+      })
+      .then(() => {
+        this.setState({ error: null });
         this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
@@ -68,6 +134,12 @@ class SignInFormBase extends Component {
           type="password"
           placeholder="Password"
         />
+        <button type="submit">
+          Sign In with Google
+        </button>
+        <button type="submit">
+          Sign In with Facebook
+        </button>
         <button disabled={isInvalid} type="submit">
           Sign In
         </button>
@@ -83,6 +155,17 @@ const SignInForm = compose(
   withFirebase,
 )(SignInFormBase);
 
+const SignInGoogle = compose(
+  withRouter,
+  withFirebase,
+)(SignInGoogleBase);
+
+const SignInFacebook = compose(
+  withRouter,
+  withFirebase,
+)(SignInFacebookBase);
+
+
 export default SignInPage;
 
-export { SignInForm };
+export { SignInForm, SignInGoogle, SignInFacebook };
