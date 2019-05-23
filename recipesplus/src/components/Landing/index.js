@@ -1,7 +1,6 @@
 import React from "react";
 
 const LandingPage = () => {
-
     return (
       
   
@@ -13,4 +12,3 @@ const LandingPage = () => {
   };
 
 export default LandingPage;
-
