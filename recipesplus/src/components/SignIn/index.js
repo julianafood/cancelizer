@@ -9,7 +9,7 @@ import * as ROUTES from '../../constants/routes';
 
 const SignInPage = () => (
   <div>
-    <h1>SignIn</h1>
+    <h1>Sign In</h1>
     <SignInForm />
     <SignInGoogle />
     <SignInFacebook />
@@ -89,12 +89,21 @@ class SignInGoogleBase extends Component {
 
     this.state = { error: null };
   }
-};
 
   onSubmit = event => {
     this.props.firebase
       .doSignInWithGoogle()
       .then(socialAuthUser => {
+         // Create a user in your Firebase Realtime Database too
+         return this.props.firebase
+         .user(socialAuthUser.user.uid)
+         .set({
+           username: socialAuthUser.user.displayName,
+           email: socialAuthUser.user.email,
+           roles: {},
+         });
+     })
+     .then(() => {
         this.setState({ error: null });
         this.props.history.push(ROUTES.HOME);
       })
@@ -129,6 +138,16 @@ class SignInFacebookBase extends Component {
     this.props.firebase
       .doSignInWithFacebook()
       .then(socialAuthUser => {
+         // Create a user in your Firebase Realtime Database too
+         return this.props.firebase
+         .user(socialAuthUser.user.uid)
+         .set({
+           username: socialAuthUser.additionalUserInfo.profile.name,
+           email: socialAuthUser.additionalUserInfo.profile.email,
+           roles: {},
+         });
+     })
+     .then(() => {
         this.setState({ error: null });
         this.props.history.push(ROUTES.HOME);
       })
@@ -151,6 +170,7 @@ class SignInFacebookBase extends Component {
     );
   }
 }
+
 
 const SignInForm = compose(
   withRouter,
