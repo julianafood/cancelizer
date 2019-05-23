@@ -12,7 +12,7 @@ const SignInPage = () => (
     <h1>SignIn</h1>
     <SignInForm />
     <SignInGoogle />
-    <SigninFacebook />
+    <SignInFacebook />
     <PasswordForgetLink />
     <SignUpLink />
   </div>
@@ -46,8 +46,8 @@ class SignInFormBase extends Component {
 
     event.preventDefault();
   };
- 
-  class SignInGoogleBase extends Component {
+}
+class SignInGoogleBase extends Component {
   constructor(props) {
     super(props);
 
@@ -77,8 +77,9 @@ class SignInFormBase extends Component {
 
     event.preventDefault();
   };
+}
 
-    class SignInFacebookBase extends Component {
+class SignInFacebookBase extends Component {
   constructor(props) {
     super(props);
 
