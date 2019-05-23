@@ -46,69 +46,6 @@ class SignInFormBase extends Component {
 
     event.preventDefault();
   };
-}
-class SignInGoogleBase extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { error: null };
-  }
-
-  onSubmit = event => {
-    this.props.firebase
-      .doSignInWithGoogle()
-      .then(socialAuthUser => {
-        //Create a user in Firebase realtime database
-        return this.props.firebase
-          .user(socialAuthUser.user.uid)
-          .set({
-            username: socialAuthUser.user.displayName,
-            email: socialAuthUser.user.email,
-            roles: {},
-          });
-      })
-      .then(() => {
-        this.setState({ error: null });
-        this.props.history.push(ROUTES.HOME);
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-
-    event.preventDefault();
-  };
-}
-
-class SignInFacebookBase extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { error: null };
-  }
-
-  onSubmit = event => {
-    this.props.firebase
-      .doSignInWithFacebook()
-      .then(socialAuthUser => {
-        //Create a user in Firebase realtime database
-        return this.props.firebase
-          .user(socialAuthUser.user.uid)
-          .set({
-            username: socialAuthUser.additionalUserInfo.profile.name,
-            email: socialAuthUser.additionalUserInfo.profile.email,
-            roles: {},
-          });
-      })
-      .then(() => {
-        this.setState({ error: null });
-        this.props.history.push(ROUTES.HOME);
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-
-    event.preventDefault();
-  };
 
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -135,15 +72,78 @@ class SignInFacebookBase extends Component {
           type="password"
           placeholder="Password"
         />
-        <button type="submit">
-          Sign In with Google
-        </button>
-        <button type="submit">
-          Sign In with Facebook
-        </button>
+
         <button disabled={isInvalid} type="submit">
           Sign In
-        </button>
+      </button>
+
+        {error && <p>{error.message}</p>}
+      </form>
+    );
+  }
+}
+
+class SignInGoogleBase extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { error: null };
+  }
+
+  onSubmit = event => {
+    this.props.firebase
+      .doSignInWithGoogle()
+      .then(socialAuthUser => {
+        this.setState({ error: null });
+        this.props.history.push(ROUTES.HOME);
+      })
+      .catch(error => {
+        this.setState({ error });
+      });
+
+    event.preventDefault();
+  };
+
+  render() {
+    const { error } = this.state;
+
+    return (
+      <form onSubmit={this.onSubmit}>
+        <button type="submit">Sign In with Google</button>
+
+        {error && <p>{error.message}</p>}
+      </form>
+    );
+  }
+}
+
+class SignInFacebookBase extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { error: null };
+  }
+
+  onSubmit = event => {
+    this.props.firebase
+      .doSignInWithFacebook()
+      .then(socialAuthUser => {
+        this.setState({ error: null });
+        this.props.history.push(ROUTES.HOME);
+      })
+      .catch(error => {
+        this.setState({ error });
+      });
+
+    event.preventDefault();
+  };
+
+  render() {
+    const { error } = this.state;
+
+    return (
+      <form onSubmit={this.onSubmit}>
+        <button type="submit">Sign In with Facebook</button>
 
         {error && <p>{error.message}</p>}
       </form>
