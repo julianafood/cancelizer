@@ -2,6 +2,10 @@
   "name": "cancelizer",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "6.9.0",
+    "npm": "11.9.0"
+  },
   "dependencies": {
     "babel-eslint": "^10.0.1",
     "firebase": "^6.0.2",
