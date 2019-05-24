@@ -34,5 +34,48 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      $("#sButton").on("click", function (event) {
+            var provider = $("#providerInput").val().trim();
+            var subscriptionDate = $("#sDateInput").val().trim();
+            var daysLeft = $("#daysLeftInput").val().trim();
+
+            event.preventDefault()
+
+            console.log(provider),
+                  console.log(subscriptionDate),
+                  console.log(daysLeft);
+            var timeToAdd = parseInt(daysLeft) * 86400000;
+            var subDate = new Date(subscriptionDate);
+            var final = subDate.setTime(subDate.getTime() + timeToAdd);
+            var expirationDate = new Date(final)
+            // var expirationDay = parseInt(dayOfTheMonth) + parseInt(daysLeft);
+            // var expirationDate = 
+            // var expirationDate = parseInt(dayOfTheMonth) + parseInt(daysLeft);
+
+            addInputRow(provider, subscriptionDate, daysLeft)
+
+
+            insertData(provider, subscriptionDate, daysLeft)
+            readData(provider)
+
+
+            function addInputRow(provider, subscriptionDate, daysLeft) {
+                  console.log("inAddTrainRow")
+                  var providerRow = "<td>" + provider + "</td>"
+                  var subscriptionDateRow = "<td>" + subscriptionDate + "</td>"
+                  var daysLeftRow = "<td>" + expirationDate + "</td>"
+
+                  $("#subTable").append("<tr>" + providerRow + subscriptionDateRow + daysLeftRow +
+                        "</tr>")
+
+                  $("#providerInput").val("");
+                  $("#sDateInput").val("");
+                  $("#daysLeftInput").val("");
+
+            }
+      });
+</script>
+
   </body>
 </html>
